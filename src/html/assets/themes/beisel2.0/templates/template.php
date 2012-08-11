@@ -188,6 +188,7 @@
         }
       });
     </script>
+    <script type="text/javascript" src="/assets/javascripts/retina.js"></script>
     <?php $this->plugin->invoke('renderFooter'); ?>
   </body>
 </html>
