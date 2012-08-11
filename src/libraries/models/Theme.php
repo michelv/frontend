@@ -58,6 +58,9 @@ class Theme
       case 'util':
         return $utilityObj->returnValue('/assets/javascripts/openphoto-util.js', $write);
         break;
+      case 'retina':
+        return $utilityObj->returnValue('/assets/javascripts/retina.js', $write);
+        break;
     }
   }
 

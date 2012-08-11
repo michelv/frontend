@@ -162,6 +162,15 @@ class Photo extends BaseModel
 
     try
     {
+      if ($this->config->photos->retina == 1) {
+        // generate retina version from original, which is likely bigger than base version
+        $filename_retina = $this->fs->getPhoto($photo['pathOriginal']);
+        $filename_retina = preg_replace('/(\.[a-z]+)$/i', '@2x$1', $filename_retina);
+
+        $image_retina = clone $this->image;
+        $image_retina->load($filename_retina);
+      }
+
       $this->image->load($filename);
     }
     catch(OPInvalidImageException $e)
@@ -186,6 +195,16 @@ class Photo extends BaseModel
             break;
         }
       }
+    }
+
+    if ($this->config->photos->retina == 1) {
+      $image_retina->scale($width * 2, $height * 2, $maintainAspectRatio);
+      $image_retina->write($filename_retina);
+
+      $customPath = $this->generateCustomUrl($photo['pathBase'], $width, $height, $options);
+      $customPath_retina = preg_replace('/(\.[a-z]+)$/i', '@2x$1', $customPath);
+
+      $resFs_retina = $this->fs->putPhoto($filename_retina, $customPath_retina);
     }
 
     $this->image->scale($width, $height, $maintainAspectRatio);
